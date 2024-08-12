@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'page9.dart'; // Import Page9
-import 'todo.dart'; // Import TodoListPage
+import 'page9.dart'; // Make sure to import page9.dart
 
 class Page5 extends StatelessWidget {
   final VoidCallback onCloseSidePanel;
@@ -23,10 +22,10 @@ class Page5 extends StatelessWidget {
             child: Container(
               width: width * 0.55, // Adjusted width based on screen size
               height: height, // Adjusted height to full screen
-              decoration: const BoxDecoration(color: Color(0xFF2D2D34)),
+              decoration: const BoxDecoration(color: Color(0xFF031640)),
             ),
           ),
-          // Hamburger menu icon
+          // Sidebar menu icon
           Positioned(
             left: width * 0.02, // Adjusted left position based on screen size
             top: height * 0.02, // Adjusted top position based on screen size
@@ -37,7 +36,8 @@ class Page5 extends StatelessWidget {
                 height: height * 0.05, // Adjusted height based on screen size
                 decoration: const BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage("images/hamburger.png"),
+                    image: AssetImage(
+                        "images/sidebar_icon.png"), // Updated path to sidebar icon
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -90,22 +90,14 @@ class Page5 extends StatelessWidget {
                   child: menuItem('Flashcards', width),
                 ),
                 SizedBox(height: height * 0.03),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TodoListPage()),
-                    );
-                  },
-                  child: menuItem('To-Do List', width), // New menu item for To-Do List
-                ),
-                SizedBox(height: height * 0.03),
                 menuItem('Resources', width),
                 SizedBox(height: height * 0.03),
-
+                menuItem('AI Tutor', width),
+                SizedBox(height: height * 0.03),
                 menuItem('History', width),
                 SizedBox(height: height * 0.03),
-
+                menuItem1('Recents', width),
+                SizedBox(height: height * 0.2),
               ],
             ),
           ),
@@ -174,7 +166,8 @@ class Page5 extends StatelessWidget {
             label,
             style: TextStyle(
               color: Colors.white,
-              fontSize: fontSize, // Adjusted font size based on passed parameter
+              fontSize:
+              fontSize, // Adjusted font size based on passed parameter
               fontWeight: FontWeight.w400,
             ),
           ),

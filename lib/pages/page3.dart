@@ -1,7 +1,51 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'page4.dart';
 
-class AndroidSmall13 extends StatelessWidget {
+class AndroidSmall13 extends StatefulWidget {
+  @override
+  _AndroidSmall13State createState() => _AndroidSmall13State();
+}
+
+class _AndroidSmall13State extends State<AndroidSmall13> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  String _errorMessage = '';
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _signUp() async {
+    if (_passwordController.text.trim() != _confirmPasswordController.text.trim()) {
+      setState(() {
+        _errorMessage = 'Passwords do not match';
+      });
+      return;
+    }
+
+    try {
+      final UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // On successful signup, navigate to the next page
+      Navigator.pushNamed(context, '/page4');
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message ?? 'An unknown error occurred';
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get screen width and height
@@ -71,12 +115,7 @@ class AndroidSmall13 extends StatelessWidget {
               child: Container(
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.2,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("images/Web_Photo_Editor.jpg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
+
               ),
             ),
             // SIGN UP Button
@@ -84,9 +123,7 @@ class AndroidSmall13 extends StatelessWidget {
               left: screenWidth * 0.2,
               top: screenHeight * 0.8, // Adjusted position
               child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/page4');
-                },
+                onTap: _signUp, // Trigger the signup function
                 child: Container(
                   width: screenWidth * 0.6,
                   height: screenHeight * 0.06,
@@ -162,6 +199,7 @@ class AndroidSmall13 extends StatelessWidget {
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.05,
                 child: TextField(
+                  controller: _usernameController,
                   decoration: InputDecoration(
                     hintText: 'Username',
                     hintStyle: TextStyle(
@@ -191,6 +229,7 @@ class AndroidSmall13 extends StatelessWidget {
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.05,
                 child: TextField(
+                  controller: _emailController,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     hintStyle: TextStyle(
@@ -220,6 +259,7 @@ class AndroidSmall13 extends StatelessWidget {
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.05,
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -250,6 +290,7 @@ class AndroidSmall13 extends StatelessWidget {
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.05,
                 child: TextField(
+                  controller: _confirmPasswordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Confirm Password',
@@ -286,6 +327,21 @@ class AndroidSmall13 extends StatelessWidget {
                 ),
               ),
             ),
+            // Display error message if signup fails
+            if (_errorMessage.isNotEmpty)
+              Positioned(
+                left: screenWidth * 0.2,
+                top: screenHeight * 0.68,
+                child: Text(
+                  _errorMessage,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: screenWidth * 0.04,
+                    fontFamily: 'Kumbh Sans',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

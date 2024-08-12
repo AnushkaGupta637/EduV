@@ -28,7 +28,7 @@ class _TodoListPageState extends State<TodoListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('To-Do List'),
-        backgroundColor: Color(0xFF98647A),
+        backgroundColor: Colors.blue,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -63,7 +63,7 @@ class _TodoListPageState extends State<TodoListPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _addTodo,
         child: Icon(Icons.add),
-        backgroundColor: Color(0xFF98647A),
+        backgroundColor: Colors.blue,
       ),
     );
   }

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
-import 'page5.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:video_player/video_player.dart';
 
 class Page7 extends StatefulWidget {
-  final String prompt; // Add prompt parameter
+  final String prompt;
 
-  Page7({required this.prompt}); // Constructor to receive prompt
+  Page7({required this.prompt});
 
   @override
   _Page7State createState() => _Page7State();
@@ -13,53 +14,124 @@ class Page7 extends StatefulWidget {
 
 class _Page7State extends State<Page7> {
   final TextEditingController _controller = TextEditingController();
-  final List<Map<String, String>> _messages = []; // Store messages and their types (user/ai)
+  final List<Map<String, String>> _messages = [];
   final GenerativeModel _model = GenerativeModel(
-    model: 'gemini-1.5-flash', // Specify your model name
-    apiKey: 'AIzaSyD_qA5VwiXQrRuwHHebOdBFL0Z15YCuiMo', // Replace with your actual API key
+    model: 'gemini-1.5-flash',
+    apiKey: "AIzaSyD_qA5VwiXQrRuwHHebOdBFL0Z15YCuiMo",
   );
 
-  Future<void> _sendMessage() async {
+  VideoPlayerController? _videoPlayerController;
+  String? _errorMessage;
+  bool _isVideoLoading = false;
+
+  Future<String?> fetchVideoWithDelay(String prompt) async {
+    await Future.delayed(Duration(seconds: 3));
+
+    try {
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('videos')
+          .where('title', isEqualTo: prompt) // Updated to query by title
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        String videoUrl = querySnapshot.docs.first.get('path'); // Ensure this field contains the URL
+        return videoUrl;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print('Error fetching video: $e');
+      return null;
+    }
+  }
+
+  void _sendMessage() async {
     final message = _controller.text.trim();
     if (message.isNotEmpty) {
       setState(() {
         _messages.add({'type': 'user', 'text': message});
-        _messages.add({'type': 'ai', 'text': 'Processing...'}); // Placeholder for AI response
+        _messages.add({'type': 'ai', 'text': 'Processing...'});
       });
       _controller.clear();
 
-      // Call the Gemini API
+      final content = [Content.text(message)];
       try {
-        final content = [Content.text(message)];
         final response = await _model.generateContent(content);
         setState(() {
-          _messages[_messages.length - 1]['text'] = response.text ?? 'Error: No response';
+          _messages[_messages.length - 1]['text'] =
+              response.text ?? 'Error: No response from AI';
         });
+
+        setState(() {
+          _isVideoLoading = true;
+          _errorMessage = null;
+        });
+
+        String? videoUrl = await fetchVideoWithDelay(message);
+        if (videoUrl != null) {
+          setState(() {
+            _videoPlayerController = VideoPlayerController.network(videoUrl)
+              ..initialize().then((_) {
+                setState(() {
+                  _isVideoLoading = false;
+                });
+                _videoPlayerController?.play();
+              }).catchError((error) {
+                setState(() {
+                  _isVideoLoading = false;
+                  _errorMessage = 'Error initializing video: $error';
+                });
+              });
+          });
+        } else {
+          setState(() {
+            _isVideoLoading = false;
+            _errorMessage = 'No video found for the provided prompt';
+          });
+        }
       } catch (e) {
         setState(() {
-          _messages[_messages.length - 1]['text'] = 'Error: ${e.toString()}';
+          _messages[_messages.length - 1]['text'] =
+          'Error: ${e.toString()}';
+          _isVideoLoading = false;
         });
       }
     }
   }
 
   @override
+  void dispose() {
+    _videoPlayerController?.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF2D2D34), // Background color from the provided image
+      backgroundColor: Color(0xFF031640),
       appBar: AppBar(
-        title: Text('Chat Interface'),
-        backgroundColor: Colors.black, // Match the design theme
+        title: Text(
+          'Chat Interface',
+          style: TextStyle(
+            color: Color(0xFFED5552),
+            fontFamily: 'Inter',
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+          ),
+        ),
+        backgroundColor: Color(0xffffffff),
       ),
       body: Column(
         children: [
-          // Display the prompt text at the top
           Padding(
             padding: EdgeInsets.all(10),
             child: Text(
-              widget.prompt, // Display prompt received from page4.dart
+              widget.prompt,
               style: TextStyle(
                 color: Colors.white,
+                fontFamily: 'Inter',
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -82,7 +154,7 @@ class _Page7State extends State<Page7> {
                     decoration: BoxDecoration(
                       color: isUserMessage
                           ? Color(0xFFE4FF1A)
-                          : Color(0xFFFFE4B5), // User message color and AI message color
+                          : Color(0xFFFFE4B5),
                       borderRadius: BorderRadius.circular(15),
                     ),
                     child: Text(
@@ -90,6 +162,12 @@ class _Page7State extends State<Page7> {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
+                        fontStyle: isUserMessage
+                            ? FontStyle.normal
+                            : FontStyle.italic,
+                        fontWeight: isUserMessage
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                     ),
                   ),
@@ -97,6 +175,25 @@ class _Page7State extends State<Page7> {
               },
             ),
           ),
+          if (_isVideoLoading)
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: CircularProgressIndicator(),
+            ),
+          if (_videoPlayerController != null &&
+              _videoPlayerController!.value.isInitialized)
+            AspectRatio(
+              aspectRatio: _videoPlayerController!.value.aspectRatio,
+              child: VideoPlayer(_videoPlayerController!),
+            ),
+          if (_errorMessage != null)
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: Text(
+                _errorMessage!,
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
           Padding(
             padding: EdgeInsets.all(10),
             child: Row(
@@ -109,7 +206,8 @@ class _Page7State extends State<Page7> {
                       hintStyle: TextStyle(color: Color(0xFFA1A1A1)),
                       filled: true,
                       fillColor: Colors.white,
-                      contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                      contentPadding:
+                      EdgeInsets.symmetric(vertical: 10, horizontal: 15),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(25),
                         borderSide: BorderSide.none,
@@ -123,7 +221,7 @@ class _Page7State extends State<Page7> {
                   child: Container(
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Color(0xFFE4FF1A), // Same color as the message box
+                      color: Color(0xFFE4FF1A),
                       shape: BoxShape.circle,
                     ),
                     child: Icon(Icons.send, color: Colors.black),

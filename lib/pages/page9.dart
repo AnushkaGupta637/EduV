@@ -148,7 +148,7 @@ class _Page9State extends State<Page9> {
                     width: width * 0.575,
                     height: height * 0.292,
                     decoration: ShapeDecoration(
-                      color: Color(0x99B97375),
+                      color: Color(0xFF031640),
                       shape: OvalBorder(),
                     ),
                   ),
@@ -160,7 +160,7 @@ class _Page9State extends State<Page9> {
                     width: width * 0.633,
                     height: height * 0.333,
                     decoration: ShapeDecoration(
-                      color: Color(0xFFB97375),
+                      color: Color(0xFFFCAE3F),
                       shape: OvalBorder(),
                     ),
                   ),
@@ -172,7 +172,7 @@ class _Page9State extends State<Page9> {
                     width: width * 0.278,
                     height: height * 0.136,
                     decoration: ShapeDecoration(
-                      color: Color(0xE5E8AA14),
+                      color: Color(0xFFED5552),
                       shape: OvalBorder(),
                     ),
                   ),

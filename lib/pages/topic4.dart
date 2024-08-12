@@ -1,7 +1,5 @@
-// Import the Flutter material package
 import 'package:flutter/material.dart';
 
-// Define a stateful widget for the Geometry Quiz Page
 class Topic4 extends StatefulWidget {
   @override
   _Topic4State createState() => _Topic4State();
@@ -60,17 +58,15 @@ class _Topic4State extends State<Topic4> {
       ],
       'correctAnswer': 1,
     },
+
   ];
 
-
-  // Method to toggle the side panel
   void _toggleSidePanel() {
     setState(() {
       _isSidePanelOpen = !_isSidePanelOpen;
     });
   }
 
-  // Method to check the selected answer
   void _checkAnswer(int index) {
     setState(() {
       _selectedAnswer = index;
@@ -78,7 +74,6 @@ class _Topic4State extends State<Topic4> {
     });
   }
 
-  // Method to move to the next question
   void _nextQuestion() {
     setState(() {
       if (_currentQuestionIndex < _questions.length - 1) {
@@ -142,6 +137,96 @@ class _Topic4State extends State<Topic4> {
           ),
 
           // Main content
+
+          Positioned(
+            left: screenWidth * -0.15,
+            top: screenHeight * 0.07,
+            child: Container(
+              width: screenWidth * 0.57,
+              height: screenHeight * 0.29,
+              decoration: ShapeDecoration(
+                color: Color(0xFF031640),
+                shape: OvalBorder(),
+              ),
+            ),
+          ),
+          Positioned(
+            left: screenWidth * 0.15,
+            top: screenHeight * -0.06,
+            child: Container(
+              width: screenWidth * 0.63,
+              height: screenHeight * 0.33,
+              decoration: ShapeDecoration(
+                color: Color(0xFFFCAE3F),
+                shape: OvalBorder(),
+              ),
+            ),
+          ),
+          Positioned(
+            left: screenWidth * 0.61,
+            top: screenHeight * 0.1,
+            child: Container(
+              width: screenWidth * 0.28,
+              height: screenHeight * 0.14,
+              decoration: ShapeDecoration(
+                color: Color(0xFFED5552),
+                shape: OvalBorder(),
+              ),
+            ),
+          ),
+          Positioned(
+            left: screenWidth * 0.77,
+            top: screenHeight * 0.27,
+            child: Container(
+              width: screenWidth * 0.09,
+              height: screenHeight * 0.09,
+              decoration: ShapeDecoration(
+                color: Color(0xE5E4FF1A),
+                shape: OvalBorder(),
+              ),
+            ),
+          ),
+          Positioned(
+            left: 0,
+            top: screenHeight * 0.0125,
+            child: GestureDetector(
+              onTap: _toggleSidePanel,
+              child: Container(
+                width: screenWidth * 0.15,
+                height: screenHeight * 0.048,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("images/hamburger.png"),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            left: screenWidth * 0.73,
+            top: screenHeight * 0.014,
+            child: Container(
+              width: screenWidth * 0.24,
+              height: screenHeight * 0.067,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: AssetImage("images/eduv.jpg"),
+                  fit: BoxFit.fill,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(720),
+                ),
+                shadows: [
+                  BoxShadow(
+                    color: Color(0x3F000000),
+                    blurRadius: 4,
+                    offset: Offset(0, 4),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Positioned(
             left: screenWidth * 0.05,
             top: screenHeight * 0.23,
@@ -272,7 +357,6 @@ class _Topic4State extends State<Topic4> {
     );
   }
 
-  // Build answer options dynamically
   List<Widget> _buildAnswerOptions(double screenWidth, double screenHeight) {
     final options = _questions[_currentQuestionIndex]['options'] as List<String>;
     return List<Widget>.generate(
@@ -286,7 +370,6 @@ class _Topic4State extends State<Topic4> {
     );
   }
 
-  // Build a single answer option
   Widget _buildAnswerOption(
       int index, String text, double screenWidth, double screenHeight) {
     return Positioned(
@@ -322,7 +405,6 @@ class _Topic4State extends State<Topic4> {
     );
   }
 
-  // Build a menu item for the side panel
   Widget _buildMenuItem(IconData icon, String label) {
     return ListTile(
       leading: Icon(icon, color: Colors.white),

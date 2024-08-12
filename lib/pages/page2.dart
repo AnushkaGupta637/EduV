@@ -1,8 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'page3.dart';
 import 'page4.dart';
 
-class AndroidSmall12 extends StatelessWidget {
+class AndroidSmall12 extends StatefulWidget {
+  @override
+  _AndroidSmall12State createState() => _AndroidSmall12State();
+}
+
+class _AndroidSmall12State extends State<AndroidSmall12> {
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  String _errorMessage = '';
+
+  Future<void> _login() async {
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _usernameController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+      // On successful login, navigate to the next page
+      Navigator.pushNamed(context, '/page4');
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = e.message ?? 'An unknown error occurred';
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // Get screen width and height
@@ -14,7 +46,7 @@ class AndroidSmall12 extends StatelessWidget {
         width: screenWidth,
         height: screenHeight,
         clipBehavior: Clip.antiAlias,
-        decoration: BoxDecoration(color: Color(0xFFF7F3E8)), // Light beige background
+        decoration: BoxDecoration(color: Color(0xFFF7F3E8)),
         child: Stack(
           children: [
             // Colorful Circles
@@ -72,12 +104,6 @@ class AndroidSmall12 extends StatelessWidget {
               child: Container(
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.2,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("images/Web_Photo_Editor.jpg"),
-                    fit: BoxFit.cover,
-                  ),
-                ),
               ),
             ),
             // LOGIN Button
@@ -85,9 +111,7 @@ class AndroidSmall12 extends StatelessWidget {
               left: screenWidth * 0.2,
               top: screenHeight * 0.7, // Updated position
               child: GestureDetector(
-                onTap: () {
-                  Navigator.pushNamed(context, '/page4');
-                },
+                onTap: _login, // Trigger the login function
                 child: Container(
                   width: screenWidth * 0.6,
                   height: screenHeight * 0.06,
@@ -163,6 +187,7 @@ class AndroidSmall12 extends StatelessWidget {
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.05,
                 child: TextField(
+                  controller: _usernameController,
                   decoration: InputDecoration(
                     hintText: 'Username',
                     hintStyle: TextStyle(
@@ -192,6 +217,7 @@ class AndroidSmall12 extends StatelessWidget {
                 width: screenWidth * 0.6,
                 height: screenHeight * 0.05,
                 child: TextField(
+                  controller: _passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                     hintText: 'Password',
@@ -228,6 +254,21 @@ class AndroidSmall12 extends StatelessWidget {
                 ),
               ),
             ),
+            // Display error message if login fails
+            if (_errorMessage.isNotEmpty)
+              Positioned(
+                left: screenWidth * 0.2,
+                top: screenHeight * 0.65,
+                child: Text(
+                  _errorMessage,
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: screenWidth * 0.04,
+                    fontFamily: 'Kumbh Sans',
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
           ],
         ),
       ),

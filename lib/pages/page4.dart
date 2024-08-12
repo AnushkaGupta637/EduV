@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:animated_text_kit/animated_text_kit.dart'; // Import animated_text_kit
 import 'page7.dart'; // Import page7
 import 'compo.dart'; // Import the YellowRoundedText component
 import 'page5.dart'; // Import Page5
@@ -38,7 +39,7 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
           Container(
             width: double.infinity,
             height: double.infinity,
-            color: Colors.white,
+            color: Color(0xFFF7F3E8), // Background color
             child: Stack(
               children: [
                 // Background and decorative shapes
@@ -49,7 +50,7 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                     width: width * 0.575,
                     height: height * 0.29,
                     decoration: ShapeDecoration(
-                      color: Color(0x99B97375),
+                      color: Color(0xFF98647A).withOpacity(0.6),
                       shape: OvalBorder(),
                     ),
                   ),
@@ -61,7 +62,7 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                     width: width * 0.63,
                     height: height * 0.33,
                     decoration: ShapeDecoration(
-                      color: Color(0xFFB97375),
+                      color: Color(0xFF98647A),
                       shape: OvalBorder(),
                     ),
                   ),
@@ -73,7 +74,7 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                     width: width * 0.28,
                     height: height * 0.14,
                     decoration: ShapeDecoration(
-                      color: Color(0xE5E8AA14),
+                      color: Color(0xFFFCAE3F).withOpacity(0.9),
                       shape: OvalBorder(),
                     ),
                   ),
@@ -87,21 +88,21 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                       width: width * 0.09,
                       height: height * 0.05,
                       decoration: ShapeDecoration(
-                        color: Color(0xE5E4FF1A),
+                        color: Color(0xFFED5552).withOpacity(0.9),
                         shape: OvalBorder(),
                       ),
                     ),
                   ),
                 ),
                 Positioned(
-                  left: width * 0.09,
-                  top: height * 0.05,
+                  left: width * 0.21,
+                  top: height * 0.11,
                   child: Container(
-                    width: width * 0.86,
+                    width: width * 0.66,
                     height: height * 0.5,
                     decoration: BoxDecoration(
                       image: DecorationImage(
-                        image: AssetImage("images/boyaa.png"),
+                        image: AssetImage("images/giphy.gif"),
                         fit: BoxFit.cover, // Use BoxFit.cover or BoxFit.contain
                       ),
                     ),
@@ -117,11 +118,10 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                     child: Container(
                       width: width * 0.15,
                       height: height * 0.048,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage("images/hamburger.png"),
-                          fit: BoxFit.fill,
-                        ),
+                      child: Icon(
+                        Icons.menu,
+                        size: width * 0.1, // Adjust size based on screen width
+                        color: Color(0xFF031640), // Color of the menu icon
                       ),
                     ),
                   ),
@@ -129,69 +129,53 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
 
                 Positioned(
                   left: width * 0.73,
-                  top: height * 0.0325,
+                  top: height * 0.02,
                   child: Container(
-                    width: width * 0.24,
-                    height: height * 0.067,
+                    width: width * 0.27,
+                    height: height * 0.14,
                     decoration: ShapeDecoration(
                       image: DecorationImage(
-                        image: AssetImage("images/eduv.jpg"),
+                        image: AssetImage("images/logo.png"),
                         fit: BoxFit.fill,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(720),
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      shadows: [
-                        BoxShadow(
-                          color: Color(0x3F000000),
-                          blurRadius: 4,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
                     ),
                   ),
                 ),
 
-                // Greeting text
+                // Greeting text with animation
                 Positioned(
                   left: width * 0.064,
                   top: height * 0.555,
                   child: SizedBox(
                     width: width * 0.91,
                     height: height * 0.175,
-                    child: Text.rich(
-                      TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'Hey Username,\n',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: width * 0.055,
-                              fontFamily: 'Source Serif Pro',
-                              fontWeight: FontWeight.w700,
-                            ),
+                    child: AnimatedTextKit(
+                      animatedTexts: [
+                        TypewriterAnimatedText(
+                          'Hey Nicole!\nReady for a quest?\nAsk away, and I\'ll help you out!',
+                          textStyle: TextStyle(
+                            color: Color(0xFF031640),
+                            fontSize: width * 0.055,
+                            fontFamily: 'Source Serif Pro',
+                            fontWeight: FontWeight.w600,
                           ),
-                          TextSpan(
-                            text:
-                            'Ready for a quest?\nAsk away, and I\'ll help you out!',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: width * 0.055,
-                              fontFamily: 'Source Serif Pro',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                          speed: Duration(milliseconds: 100),
+                        ),
+                      ],
+                      totalRepeatCount: 1,
+                      pause: Duration(milliseconds: 500),
                     ),
                   ),
                 ),
 
-                // YellowRoundedText components
+                // Static yellow rounded buttons
                 YellowRoundedText(
                   text: 'How do I convert \ndecimals to fractions?➗',
                   width: width * 0.43,
-                  top: height * 0.705,
+                  top: height * 0.72,
                   left: width * 0.51,
                   fontSize: width * 0.03,
                 ),
@@ -227,11 +211,11 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                       width: width * 0.42,
                       height: height * 0.078,
                       decoration: ShapeDecoration(
-                        color: Color(0xFFE4FF1A),
+                        color: Color(0xFF031640),
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
                             width: 2,
-                            color: Colors.white,
+                            color: Color(0xFFC6BEBC),
                           ),
                           borderRadius: BorderRadius.circular(19),
                         ),
@@ -240,7 +224,7 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
                         child: Text(
                           'Ask Questions',
                           style: TextStyle(
-                            color: Colors.black,
+                            color: Color(0xffffffff),
                             fontSize: width * 0.045,
                             fontWeight: FontWeight.w700,
                           ),
@@ -261,7 +245,7 @@ class _AndroidSmall2State extends State<AndroidSmall2> {
               child: Container(
                 width: width * 0.55, // Responsive width for the side panel
                 height: height,
-                color: Color(0xFF2D2D34),
+                color: Color(0xFF031640),
                 child: Page5(
                   onCloseSidePanel: _toggleSidePanel,
                 ),

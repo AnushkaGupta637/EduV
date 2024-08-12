@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'page9.dart'; // Make sure to import page9.dart
+import 'todo.dart';
 
 class Page5 extends StatelessWidget {
   final VoidCallback onCloseSidePanel;
@@ -88,6 +89,16 @@ class Page5 extends StatelessWidget {
                     );
                   },
                   child: menuItem('Flashcards', width),
+                ),
+                SizedBox(height: height * 0.03),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => TodoListPage()),
+                    );
+                  },
+                  child: menuItem('To-Do', width),
                 ),
                 SizedBox(height: height * 0.03),
                 menuItem('Resources', width),

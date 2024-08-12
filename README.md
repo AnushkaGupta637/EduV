@@ -1,5 +1,5 @@
 <h1 align=center>EduV</h1>
-<h3 align=center>Let's Viusizalize the concept</h3>
+<h3 align=center>Let's visualize the concept</h3>
 
 <p>Eduv is an innovative educational app designed to make learning more personalized, visual, and engaging. Powered by advanced technology like the Gemini API, Eduv provides a dynamic learning experience tailored to individual needs. 
 

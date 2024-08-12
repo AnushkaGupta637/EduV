@@ -17,7 +17,7 @@ class _Page7State extends State<Page7> {
   final List<Map<String, String>> _messages = [];
   final GenerativeModel _model = GenerativeModel(
     model: 'gemini-1.5-flash',
-    apiKey: "AIzaSyD_qA5VwiXQrRuwHHebOdBFL0Z15YCuiMo",
+    apiKey: "API_KEY",
   );
 
   VideoPlayerController? _videoPlayerController;
